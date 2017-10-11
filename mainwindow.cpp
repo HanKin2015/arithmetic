@@ -25,7 +25,7 @@
 #include <time.h>
 using namespace std;
 #define get_langue_str(x,y) CS2QS(x.get_##y())
-
+/*类型转换*/
 QString  CS2QS(char *x)
 {
     QString ret= QString(x);
@@ -102,12 +102,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
         submitBtn = new QPushButton(this);
         submitBtn->setText(get_langue_str(language,submit));
-        timeLabel->setText(get_langue_str(language,second));
-        //timeLabel->setAlignment(Qt::AlignHCenter);
-
+        this->setTime();
         layout->addWidget(submitBtn, 1, 2, 1, 1);
 
-        score->setText(get_langue_str(language,score));
+        //score->setText(get_langue_str(language,score));
+        this->setScore();
         layout->addWidget(score, 1, 4, 1, 1);
 
         // 第三行算式生成布局
@@ -151,6 +150,7 @@ char* MainWindow::getRecord()
     return buffer;
 }
 
+/*更新UI*/
 void MainWindow::setUI()
 {
    menu_F->setTitle((get_langue_str(language,file)));
@@ -194,8 +194,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+/*更新界面时间*/
 void MainWindow::setTime()
 {
+    /*动态获取界面文本内容*/
     QString temp = get_langue_str(language,mtime);
     QString s =get_langue_str(language,second);
     QString str = QString(temp+"%1"+s).arg(QString::number(timeCnt, 10));
@@ -236,16 +238,11 @@ void MainWindow::generate()
     formulaWidget->setColumnWidth(1, 200);
     formulaWidget->setColumnWidth(2, 200);
     formulaWidget->setColumnHidden(2,true);
-    //formulaWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    //formulaWidget->show();
-
     for(int i = 0; i < formulaCount; i++)
     {
         QTableWidgetItem *item0 = formulaWidget->item(i,0);
         QTableWidgetItem *item2 = formulaWidget->item(i,2);
         Generate FORMULA;
-        //cout << FORMULA.formulaString << endl;
-
         if(item0) {
             item0->setFlags((item0->flags()&(~Qt::ItemIsEditable)));
         }
@@ -264,7 +261,7 @@ void MainWindow::generate()
             formulaWidget->setItem(i, 2, item2);
         }
     }
-    CanSubmit = true;
+    CanSubmit = true;   //当前可以提交
 }
 
 void MainWindow::setScore()
@@ -275,8 +272,10 @@ void MainWindow::setScore()
 
 void MainWindow::judge()
 {
+    /*如果未生成题目或已经提交过了，就不能提交*/
     if (formulaCount == 0 || !CanSubmit)
         return ;
+    /*解绑计时器的回调函数*/
     timer->disconnect();
     startBtn->connect(startBtn, &QPushButton::clicked, this, &MainWindow::generate);
 
@@ -301,7 +300,7 @@ void MainWindow::judge()
     int dex = scores * 100;
     scores = dex / 100.0;
     QString pre = get_langue_str(language,score);
-    QString temp = QString("：%1").arg(scores);
+    QString temp = QString("%1").arg(scores);
     qscore = temp;
     this->setScore();
     CanSubmit = false;

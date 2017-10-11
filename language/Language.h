@@ -6,7 +6,7 @@ enum{
     LANGUAGE_ENGLISH,
     LANGUAGE_CHINESE_T,
 }LANGUAGE_TYPE;
-
+/*界面所需的文本*/
 typedef struct {
     char *start;
     char *stop;
@@ -41,6 +41,7 @@ public:
     Language(int t);
     Language();
     void setLanguageType(int t);
+    /*声明相应的文本获取函数*/
     Declare_func(start)
     Declare_func(stop)
     Declare_func(input)

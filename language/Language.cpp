@@ -42,7 +42,7 @@ void Language::setContext()
      this->type=t;
      this->setContext();
  }
-
+/*实现相应的文本获取函数*/
 Implement_func(start)
 Implement_func(stop)
 Implement_func(input)
