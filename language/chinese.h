@@ -1,7 +1,7 @@
 #ifndef CHINESE_H
 #define CHINESE_H
 #include "language.h"
-static char* CN_start ="开始";
+static char* CN_start ="开始答题";
 static char* CN_stop ="停止";
 static char* CN_input ="请输入题目数量";
 static char* CN_clear ="清零";
@@ -17,7 +17,14 @@ static char* CN_language="语言(&L)";
 static char* CN_help="帮助(&H)";
 static char* CN_params="&参数";
 static char* CN_about="&关于";
-
+static char* CN_record="记录";
+static char* CN_history="历史记录:";
+static char* CN_mtime="时间:";
+static char* CN_unit="分";
+static char* CN_reset="重置";
+static char* CN_formula="算式";
+static char* CN_answer="答案";
+static char* CN_uinput="输入";
 #define CN_Set_Value(x) context->x = CN_##x;
 
 void set_CN_context(Language_Context * context)
@@ -38,6 +45,14 @@ void set_CN_context(Language_Context * context)
     CN_Set_Value(help)
     CN_Set_Value(params)
     CN_Set_Value(about)
+    CN_Set_Value(record)
+    CN_Set_Value(history)
+    CN_Set_Value(mtime)
+    CN_Set_Value(unit)
+    CN_Set_Value(reset)
+    CN_Set_Value(formula)
+    CN_Set_Value(answer)
+    CN_Set_Value(uinput)
 }
 
 #endif

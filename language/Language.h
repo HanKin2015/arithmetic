@@ -24,6 +24,14 @@ typedef struct {
 	char *help;
 	char *params;
 	char *about;
+    char *record;
+    char *history;
+    char *mtime;
+    char *unit;
+    char *reset;
+    char *formula;
+    char *answer;
+    char *uinput;
 }Language_Context;
 
 
@@ -49,7 +57,14 @@ public:
     Declare_func(help)
     Declare_func(params)
     Declare_func(about)
-
+    Declare_func(record)
+    Declare_func(history)
+    Declare_func(mtime)
+    Declare_func(unit)
+    Declare_func(reset)
+    Declare_func(formula)
+    Declare_func(answer)
+    Declare_func(uinput)
 private:
     void setContext();
     int type;

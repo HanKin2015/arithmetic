@@ -1,9 +1,10 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QFont>
-
+#include <QTextCodec>
 int main(int argc, char *argv[])
 {
+
     QApplication a(argc, argv);
     MainWindow w;
     w.setWindowTitle(QString("四则运算生成器"));

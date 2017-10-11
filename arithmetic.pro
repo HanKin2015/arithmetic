@@ -26,17 +26,27 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     formula/Fraction.cpp \
-    formula/Generate.cpp
+    formula/Generate.cpp \
+    language/Language.cpp
 
 HEADERS  += mainwindow.h \
     formula/ASMDOperation.h \
     formula/Fraction.h \
     formula/Generate.h \
     formula/Operation.h \
-    formula/OperationFactory.h
+    formula/OperationFactory.h \
+    language/Language.h \
+    ui_mainwindow.h \
+    language/English.h \
+    language/Languages.h \
+    language/Chinese.h \
+    language/Chinese_t.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
     myicon.qrc
 RC_ICONS = arithmetic.ico
+
+DISTFILES += \
+    formula/Main.exe

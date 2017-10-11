@@ -179,7 +179,7 @@ void Fraction::ChangeValue(int a, int b) {
 string Fraction::Fraction2String() {
     this->Simplification();
     string str = "";
-    if(this->isNegative && this->molecular != 0) str += "-";    // 防止出现-0情况
+    if(this->isNegative) str += "-";
     stringstream ss;
     ss << this->molecular;
     str += ss.str();

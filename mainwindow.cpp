@@ -18,77 +18,125 @@
 #include "formula/Operation.h"
 #include "formula/OperationFactory.h"
 #include "formula/Generate.h"
-#include <iomanip>
+#include "language/Language.h"
 #include <sstream>
 #include <fstream>
 #include <cstdlib>
+#include <time.h>
 using namespace std;
+#define get_langue_str(x,y) CS2QS(x.get_##y())
 
+QString  CS2QS(char *x)
+{
+    QString ret= QString(x);
+    return ret;
+}
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-    this->resize(1000,600);
-    srand((unsigned)time(NULL));  // 随机函数值动态变化
 
-    // 创建文件菜单
-    QMenu *menu_F = ui->menuBar->addMenu(tr("文件(&F)"));
-    // 创建打开文件动作
-    QAction *openAction = new QAction(tr("&打开文件"), this);
-    // 添加图标
-    QIcon openIcon(":/myimages/images/file.png");
-    openAction->setIcon(openIcon);
-    // 设置快捷键
-    openAction->setShortcut(QKeySequence(tr("Ctrl+O")));
-    // 在文件菜单中设置新的打开动作
-    menu_F->addAction(openAction);
+        ui->setupUi(this);
+        this->resize(1000,600);
+        srand((unsigned)time(NULL));  // 随机函数值动态变化
 
-    QAction *copyAction = new QAction(tr("&复制文件"), this);
-    QIcon copyIcon(":/myimages/images/copy.png");
-    copyAction->setIcon(copyIcon);
-    copyAction->setShortcut(QKeySequence(tr("Ctrl+C")));
-    menu_F->addAction(copyAction);
-    QAction *exitAction = new QAction(tr("退出(&X)"), this);
-    exitAction->setShortcut(QKeySequence(tr("Ctrl+Q")));
-    menu_F->addAction(exitAction);
+        // 创建文件菜单
+        menu_F = ui->menuBar->addMenu(get_langue_str(language,file));
+        // 创建打开文件动作
+        openAction = new QAction(get_langue_str(language,openfile), this);
+        // 添加图标
+        QIcon openIcon(":/myimages/images/file.png");
+        openAction->setIcon(openIcon);
+        // 设置快捷键
+        openAction->setShortcut(QKeySequence(tr("Ctrl+O")));
+        // 在文件菜单中设置新的打开动作
+        menu_F->addAction(openAction);
 
-    // 设置记录菜单
-    QMenu *menu_R = ui->menuBar->addMenu(tr("记录(&R)"));
-    QAction *resetAction = new QAction(tr("&重置"), this);
-    menu_R->addAction(resetAction);
+        copyAction = new QAction(get_langue_str(language,copyfile), this);
+        QIcon copyIcon(":/myimages/images/copy.png");
+        copyAction->setIcon(copyIcon);
+        copyAction->setShortcut(QKeySequence(tr("Ctrl+C")));
+        menu_F->addAction(copyAction);
+        exitAction = new QAction(get_langue_str(language,exit), this);
+        exitAction->setShortcut(QKeySequence(tr("Ctrl+Q")));
+        menu_F->addAction(exitAction);
 
-    // 设置语言菜单
-    QMenu *menu_L = ui->menuBar->addMenu(tr("语言(&L)"));
-    QAction *chineseAction = new QAction(tr("&中文"), this);
-    menu_L->addAction(chineseAction);
-    QAction *japaneseAction = new QAction(tr("&日语"), this);
-    menu_L->addAction(japaneseAction);
-    QAction *hindiAction = new QAction(tr("&印度语"), this);
-    menu_L->addAction(hindiAction);
-    QAction *englishAction = new QAction(tr("&英语"), this);
-    menu_L->addAction(englishAction);
+        // 设置记录菜单
+        menu_R = ui->menuBar->addMenu(get_langue_str(language,record));
+        resetAction = new QAction(get_langue_str(language,reset), this);
+        menu_R->addAction(resetAction);
 
-    // 设置帮助菜单
-    QMenu *menu_H = ui->menuBar->addMenu(tr("帮助(&H)"));
-    QAction *parameterAction = new QAction(tr("&参数"), this);
-    menu_H->addAction(parameterAction);
-    QAction *aboutAction = new QAction(tr("&关于"), this);
-    menu_H->addAction(aboutAction);
+        // 设置语言菜单
+        menu_L = ui->menuBar->addMenu(get_langue_str(language,language));
+        QAction *chineseAction = new QAction(tr("&简体中文"), this);
+        menu_L->addAction(chineseAction);
+        QAction *chineseTAction = new QAction(tr("&繁体中文"), this);
+        menu_L->addAction(chineseTAction);
+        QAction *englishAction = new QAction(tr("&English"), this);
+        menu_L->addAction(englishAction);
 
-    //第一行布局
-    numberLE->setPlaceholderText(tr("请输入题目数量"));
-    numberLE->setAlignment(Qt::AlignHCenter);
-    layout->addWidget(numberLE, 0, 0, 1, 2);
-    startBtn->setText(tr("开始答题"));
-    layout->addWidget(startBtn, 0, 2, 1, 1);
+        // 设置帮助菜单
+        menu_H = ui->menuBar->addMenu(get_langue_str(language,help));
+        parameterAction = new QAction(get_langue_str(language,params), this);
+        menu_H->addAction(parameterAction);
+        aboutAction = new QAction(get_langue_str(language,about), this);
+        menu_H->addAction(aboutAction);
 
+        //第一行布局
+        numberLE->setPlaceholderText(get_langue_str(language,input));
+        numberLE->setAlignment(Qt::AlignHCenter);
+        layout->addWidget(numberLE, 0, 0, 1, 2);
+        startBtn->setText(get_langue_str(language,start));
+        layout->addWidget(startBtn, 0, 2, 1, 1);
 
 
 
+        char *buf=getRecord();
+        userRecord->setText(buf);
+        historyRecord = new QLabel(this);
+        historyRecord->setText(get_langue_str(language,history));
+        layout->addWidget(historyRecord, 1, 0, 1, 1);
+        userRecord->setAlignment(Qt::AlignHCenter);
+        layout->addWidget(userRecord, 1, 1, 1, 1);
+        layout->addWidget(timeLabel, 0, 4, 1, 1);
+
+        submitBtn = new QPushButton(this);
+        submitBtn->setText(get_langue_str(language,submit));
+        timeLabel->setText(get_langue_str(language,second));
+        //timeLabel->setAlignment(Qt::AlignHCenter);
+
+        layout->addWidget(submitBtn, 1, 2, 1, 1);
+
+        score->setText(get_langue_str(language,score));
+        layout->addWidget(score, 1, 4, 1, 1);
+
+        // 第三行算式生成布局
+        layout->addWidget(formulaWidget, 2, 0, 1, 5);
+        ui->centralWidget->setLayout(layout);
+
+
+    connect(startBtn, &QPushButton::clicked, this, &MainWindow::generate);
+    connect(submitBtn, &QPushButton::clicked, this, &MainWindow::judge);
+    connect(chineseAction,SIGNAL(triggered()),this,SLOT(setChinese()));
+    connect(chineseTAction,SIGNAL(triggered()),this,SLOT(setChineseT()));
+    connect(englishAction,SIGNAL(triggered()),this,SLOT(setEnglish()));
+    connect(resetAction,SIGNAL(triggered()),this,SLOT(resetRecord()));
+}
+void MainWindow::resetRecord()
+{
+    ofstream recordFile("userRecord.txt");
+    string str=to_string(0) + "/" + to_string(0);
+    if (recordFile.is_open())
+    {
+        recordFile << str;
+        recordFile.close();
+    }
+     userRecord->setText(QString::fromStdString(str));
+}
+
+char* MainWindow::getRecord()
+{
     // 第二行布局
-    char buffer[256];
-
     ifstream recordFile("userRecord.txt");
     if (!recordFile.is_open())
     {
@@ -99,33 +147,46 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         recordFile.getline(buffer,100);
         cout << buffer << endl;
-
     }
-    userRecord->setText(buffer);
-    clearRecord = new QPushButton(this);
-    clearRecord->setText(tr("正确/总数"));
-    layout->addWidget(clearRecord, 1, 0, 1, 1);
-    userRecord->setAlignment(Qt::AlignHCenter);
-    layout->addWidget(userRecord, 1, 1, 1, 1);
-    layout->addWidget(timeLabel, 0, 4, 1, 1);
+    return buffer;
+}
 
-    QPushButton *submitBtn = new QPushButton(this);
-    submitBtn->setText(tr("提交"));
-    timeLabel->setText(tr("时间：0秒"));
-    //timeLabel->setAlignment(Qt::AlignHCenter);
+void MainWindow::setUI()
+{
+   menu_F->setTitle((get_langue_str(language,file)));
+   openAction->setText(get_langue_str(language,openfile));
+   copyAction->setText(get_langue_str(language,copyfile));
+   exitAction->setText(get_langue_str(language,exit));
+   menu_L->setTitle(get_langue_str(language,language));
+   menu_H->setTitle(get_langue_str(language,help));
+   parameterAction->setText(get_langue_str(language,params));
+   aboutAction->setText(get_langue_str(language,about));
+   submitBtn->setText(get_langue_str(language,submit));
+   startBtn->setText(get_langue_str(language,start)); ;
+   numberLE->setPlaceholderText(get_langue_str(language,input));
+   historyRecord->setText(get_langue_str(language,history));
+   menu_R->setTitle(get_langue_str(language,record));
+   resetAction->setText(get_langue_str(language,reset));
+   this->setScore();
+   this->setTime();
+   this->setFormulaWidget();
+}
 
-    layout->addWidget(submitBtn, 1, 2, 1, 1);
+void MainWindow::setChinese()
+{
+    language.setLanguageType(LANGUAGE_CHINESE);
+    this->setUI();
+}
+void MainWindow::setChineseT()
+{
+    language.setLanguageType(LANGUAGE_CHINESE_T);
+    this->setUI();
+}
 
-    score->setText(tr("成绩：0分(0/0)"));
-    layout->addWidget(score, 1, 4, 1, 1);
-
-    // 第三行算式生成布局
-    layout->addWidget(formulaWidget, 2, 0, 1, 5);
-    ui->centralWidget->setLayout(layout);
-
-    // 按钮点击信号和槽
-    connect(startBtn, &QPushButton::clicked, this, &MainWindow::generate);
-    connect(submitBtn, &QPushButton::clicked, this, &MainWindow::judge);
+void MainWindow::setEnglish()
+{
+    language.setLanguageType(LANGUAGE_ENGLISH);
+    this->setUI();
 }
 
 MainWindow::~MainWindow()
@@ -133,37 +194,55 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setTime()
+{
+    QString temp = get_langue_str(language,mtime);
+    QString s =get_langue_str(language,second);
+    QString str = QString(temp+"%1"+s).arg(QString::number(timeCnt, 10));
+    timeLabel->setText(str);
+}
+void MainWindow::setFormulaWidget()
+{
+    formulaWidget->setHorizontalHeaderLabels(
+                QStringList() << get_langue_str(language,formula)
+                            << get_langue_str(language,uinput)
+                            << get_langue_str(language,answer)
+                );    // 设置列名
+}
+
 // 更新计时器时间
 void MainWindow::timerUpdate()
 {
     timeCnt++;
-    QString str = QString("时间：%1秒").arg(QString::number(timeCnt, 10));
-    timeLabel->setText(str);
+    this->setTime();
 }
 
 void MainWindow::generate()
 {
     srand((unsigned)time(NULL));  // 随机函数值动态变化
-    // 关联定时器溢出信号和相应的槽函数
-    timeLabel->setText(tr("时间：0秒"));
-    timeCnt = 0;
-    connect(timer,&QTimer::timeout, this, &MainWindow::timerUpdate);
-    timer->start(1000);
-    startBtn->disconnect();      // 关闭开始按钮的信息传递
+        // 关联定时器溢出信号和相应的槽函数
+        timeLabel->setText(tr("时间：0秒"));
+        timeCnt = 0;
+        connect(timer,&QTimer::timeout, this, &MainWindow::timerUpdate);
+        timer->start(1000);
+        startBtn->disconnect();      // 关闭开始按钮的信息传递
 
-    int formulaCount = numberLE->text().toInt();
+    formulaCount = numberLE->text().toInt();
+    if (formulaCount==0) return ;
     formulaWidget->setRowCount(formulaCount);   // 设置题目占的行数
     formulaWidget->setColumnCount(3);
-    formulaWidget->setHorizontalHeaderLabels(QStringList() << tr("算式") << tr("答案") << tr("正确答案"));    // 设置列名
+    this->setFormulaWidget();
     formulaWidget->setColumnWidth(0, 500);
     formulaWidget->setColumnWidth(1, 200);
     formulaWidget->setColumnWidth(2, 200);
     formulaWidget->setColumnHidden(2,true);
+    //formulaWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    //formulaWidget->show();
 
     for(int i = 0; i < formulaCount; i++)
     {
-        QTableWidgetItem *item0 = formulaWidget->item(i,0); // 算式列
-        QTableWidgetItem *item2 = formulaWidget->item(i,2); // 正确答案列
+        QTableWidgetItem *item0 = formulaWidget->item(i,0);
+        QTableWidgetItem *item2 = formulaWidget->item(i,2);
         Generate FORMULA;
         //cout << FORMULA.formulaString << endl;
 
@@ -173,14 +252,14 @@ void MainWindow::generate()
         else {
             item0 = new QTableWidgetItem;
             item0->setText(QString::fromLocal8Bit(FORMULA.formulaString.c_str()));
-            item0->setFlags(item0->flags() & (~Qt::ItemIsEditable));    // 不可编辑
-            item0->setFlags(item0->flags() & (~Qt::ItemIsSelectable));  // 不可选择
+            item0->setFlags(item0->flags() & (~Qt::ItemIsEditable));
+            item0->setFlags(item0->flags() & (~Qt::ItemIsSelectable));
             formulaWidget->setItem(i, 0, item0);
 
             item2 = new QTableWidgetItem;
             item2->setText(QString::fromLocal8Bit(FORMULA.resultString.c_str()));
-            item2->setFlags(item2->flags() & (~Qt::ItemIsEditable));   // 不可编辑
-            item2->setFlags(item2->flags() & (~Qt::ItemIsSelectable)); // 不可选择
+            item2->setFlags(item2->flags() & (~Qt::ItemIsEditable));
+            item2->setFlags(item2->flags() & (~Qt::ItemIsSelectable));
             item2->setTextAlignment(Qt::AlignHCenter);
             formulaWidget->setItem(i, 2, item2);
         }
@@ -188,15 +267,20 @@ void MainWindow::generate()
     CanSubmit = true;
 }
 
+void MainWindow::setScore()
+{
+     QString unit = get_langue_str(language,unit);
+     score->setText(get_langue_str(language,score)+qscore+unit);
+}
+
 void MainWindow::judge()
 {
-    if (!CanSubmit) return ;
-
+    if (formulaCount == 0 || !CanSubmit)
+        return ;
     timer->disconnect();
     startBtn->connect(startBtn, &QPushButton::clicked, this, &MainWindow::generate);
 
     formulaWidget->setColumnHidden(2,false);
-    int formulaCount = numberLE->text().toInt();
     int rightNum = 0;               // 计算正确的个数
     float perScore = 100.0 / formulaCount;   // 每道题占有分数
     for(int i = 0; i < formulaCount; i++) {
@@ -216,8 +300,11 @@ void MainWindow::judge()
     float scores = rightNum * perScore;
     int dex = scores * 100;
     scores = dex / 100.0;
-    QString temp = QString("成绩：%1分(%2/%3)").arg(scores).arg(rightNum).arg(formulaCount);
-    score->setText(temp);
+    QString pre = get_langue_str(language,score);
+    QString temp = QString("：%1").arg(scores);
+    qscore = temp;
+    this->setScore();
+    CanSubmit = false;
 
     // 记录本次答题
     QString qstr = userRecord->text();
@@ -235,6 +322,7 @@ void MainWindow::judge()
         else
             allCount = allCount*10 + tmp;
     }
+
     rightCount += rightNum;
     allCount += formulaCount;
     str = "";
