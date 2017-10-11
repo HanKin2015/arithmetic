@@ -221,11 +221,11 @@ void MainWindow::generate()
 {
     srand((unsigned)time(NULL));  // 随机函数值动态变化
         // 关联定时器溢出信号和相应的槽函数
-        timeLabel->setText(tr("时间：0秒"));
-        timeCnt = 0;
-        connect(timer,&QTimer::timeout, this, &MainWindow::timerUpdate);
-        timer->start(1000);
-        startBtn->disconnect();      // 关闭开始按钮的信息传递
+    this->setTime();
+    timeCnt = 0;
+    connect(timer,&QTimer::timeout, this, &MainWindow::timerUpdate);
+    timer->start(1000);
+    startBtn->disconnect();      // 关闭开始按钮的信息传递
 
     formulaCount = numberLE->text().toInt();
     if (formulaCount==0) return ;
