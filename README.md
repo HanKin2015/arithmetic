@@ -1,2 +1,29 @@
-需要安装Qt5.8.0  下载地址https://download.qt.io/official_releases/qt/5.8/5.8.0/qt-opensource-windows-x86-mingw530-5.8.0.exe
-删掉主目录下的.pro.user文件后用Qtcreater打开.pro项目文件，即可编译运行
+## 自动生成小学四则运算题目的命令行 “软件”，满足以下需求
+- 参与运算的操作数(operands)除了100以内的整数以外，还要支持真分数的四则运算，例如：1/6 + 1/8 = 7/24。操作数必须随机生成。
+- 运算符(operators)为 +, −, ×, ÷ （如运算符个数固定，则不得小于3）运算符的种类和顺序必须随机生成。
+- 能处理用户的输入，并判断对错，打分统计正确率。
+- 支持带括号的多元复合运算
+- 运算符个数随机生成（考虑小学生运算复杂度，范围在1~10）
+
+
+## 自动生成小学四则运算题目的GUI“软件”，满足以下需求
+- 记录用户的对错总数，程序退出再启动的时候，能把以前的对错数量保存并在此基础上增量计算。
+- 有计时功能，能显示用户开始答题后的消耗时间。
+- 界面支持中文简体/中文繁体/英语，用户可以选择一种。
+
+## 环境配置
+- 操作系统：windows 10系统
+- 编程语言：C++
+- 开发框架：QT 5.8.0 for Desktop
+- 集成开发环境：QT Creater 4.2.1
+- 下载地址：[QT 5.8 for Desktop](https://download.qt.io/official_releases/qt/5.8/5.8.0/qt-opensource-windows-x86-mingw530-5.8.0.exe)
+
+## 项目本地编译运行
+首先需要下载安装Qt 5.8.0 for Desktop，然后下载整个项目文件，最后删掉主目录下的.pro.user文件后用Qt Creater打开.pro项目文件，即可编译运行。
+
+## 软件安装运行
+- 运行环境：windows系统
+- 软件格式：.exe文件
+
+下载[打包的可执行程序.rar](https://github.com/HanKin2015/arithmetic/raw/master/%E6%89%93%E5%8C%85%E7%9A%84%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F.rar)文件，解压文件，点击`arithmmetic.exe`即可运行。  
+ps:菜单栏上面只有记录菜单的重置和语言菜单可以点击使用，界面上需要输入题目的数量。
